@@ -1,52 +1,55 @@
-class User {
-  email;
+//Напиши класс Notes который управляет коллекцией заметок в
+//свойстве items.
+//Заметка это объект со свойствами text priority
+//Добавь классу статическое свойство Priopity,
+//в котором будет храниться объект с приоритетами.
+//Добавь методы addNote(note), removeNote(text)
+//updatePriority(text, newPriority)
+// Статический метод:
+// {
+//   HIGHT: "hight",
+//   LOW: "low",
+// }
 
-  constructor(email) {
-    this.email = email;
+class Notes {
+  static Priority() {
+    return {
+      HIGHT: "hight",
+      LOW: "low",
   }
-
-  get email() {
-    return this.email;
-  }
-
-  set email(newEmail) {
-    this.email = newEmail;
-  }
-}
-class Admin extends User {
-  // Change code below this line
-
-  static AccessLevel = {
-    BASIC: "basic",
-    SUPERUSER: "superuser",
   };
 
-  constructor({ email, accessLevel }) {
-    super(email);
-    this.accessLevel = accessLevel;
+  constructor() {
+    this.items = [];
+  };
+
+  addNote(note) {
+    this.items.push(note);
   }
 
-  blacklistedEmails = [];
-
-  blacklist(email) {
-    this.blacklistedEmails.push(email);
+  removeNote(text) {
+    const noteIndex = this.items.findIndex(element => element.text === text);
+    if(noteIndex === -1) {
+      console.log('Нет такой заметки');
+      return;
+    }
+      this.items.splice(noteIndex, 1);
   }
 
-  isBlacklisted(email) {
-    return this.blacklistedEmails.includes(email);
+  updatePriority(text, newPriority) {
+    const noteIndex = this.items.findIndex(element => element.text === text);
+    if(noteIndex === -1) {
+      console.log(`Сорян! Нет такой заметки: "${text}"`);
+      return;
+    }
+    this.items[noteIndex].priority = newPriority;
   }
-  // Change code above this line
-}
+  }
 
-const mango = new Admin({
-  email: "mango@mail.com",
-  accessLevel: Admin.AccessLevel.SUPERUSER,
-});
-
-console.log(mango.email); // "mango@mail.com"
-console.log(mango.accessLevel); // "superuser"
-
-mango.blacklist("poly@mail.com");
-console.log(mango.blacklistedEmails); // ["poly@mail.com"]
-console.log(mango.isBlacklisted("mango@mail.com")); // false
-console.log(mango.isBlacklisted("poly@mail.com")); // true
+const notes = new Notes();
+notes.addNote({text:'Первая заметка', priority: Notes.Priority().HIGHT});
+notes.addNote({text:'Вторая заметка', priority: Notes.Priority().LOW});
+notes.addNote({text:'Третья заметка', priority: Notes.Priority().LOW});
+notes.removeNote('Первая заметка');
+notes.updatePriority('Втора заметка', Notes.Priority().HIGHT);
+console.log(notes);
